@@ -1,74 +1,76 @@
+<?php
+session_start();
+
+// Inicializa os totais se não existirem
+if (!isset($_SESSION['total_desconto'])) {
+    $_SESSION['total_desconto'] = 0;
+    $_SESSION['total_pago'] = 0;
+}
+
+$mensagem = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $valorVeiculo = (float)$_POST['valor'];
+    $combustivel = $_POST['combustivel'];
+
+    if ($valorVeiculo > 0) {
+        // Define o percentual de desconto
+        switch ($combustivel) {
+            case 'alcool':   $percentual = 0.25; break;
+            case 'gasolina': $percentual = 0.21; break;
+            case 'diesel':   $percentual = 0.14; break;
+            default:         $percentual = 0;    break;
+        }
+
+        $valorDesconto = $valorVeiculo * $percentual;
+        $valorFinal = $valorVeiculo - $valorDesconto;
+
+        // Acumula nos totais da sessão
+        $_SESSION['total_desconto'] += $valorDesconto;
+        $_SESSION['total_pago'] += $valorFinal;
+
+        $mensagem = "Desconto de R$ " . number_format($valorDesconto, 2, ',', '.') . 
+                    " | Valor a pagar: R$ " . number_format($valorFinal, 2, ',', '.');
+    } else {
+        $mensagem = "<strong>Entrada encerrada (Valor Zero).</strong>";
+    }
+}
+
+// Botão para resetar os totais
+if (isset($_GET['limpar'])) {
+    session_destroy();
+    header("Location: " . $_SERVER['PHP_SELF']);
+}
+?>
+
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <title>Concessionária CARANGO</title>
 </head>
 <body>
-    <h2>Cadastro de Veículos</h2>
+    <h2>Vendas CARANGO</h2>
     <form method="post">
-        <label>Valor do veículo (R$):</label>
-        <input type="number" step="0.01" name="valor" required><br><br>
+        <label>Valor do Veículo (0 para encerrar):</label><br>
+        <input type="number" step="0.01" name="valor" required autofocus><br><br>
 
-        <label>Combustível:</label>
-        <select name="combustivel" required>
-            <option value="alcool">Álcool</option>
-            <option value="gasolina">Gasolina</option>
-            <option value="diesel">Diesel</option>
+        <label>Combustível:</label><br>
+        <select name="combustivel">
+            <option value="alcool">Álcool (25%)</option>
+            <option value="gasolina">Gasolina (21%)</option>
+            <option value="diesel">Diesel (14%)</option>
         </select><br><br>
 
-        <input type="submit" value="Calcular">
+        <button type="submit">Calcular</button>
+        <a href="?limpar=1">Reiniciar Totais</a>
     </form>
 
-    <?php
-    session_start();
-
-    // Inicializa variáveis de sessão
-    if (!isset($_SESSION['totalDesconto'])) {
-        $_SESSION['totalDesconto'] = 0;
-        $_SESSION['totalPago'] = 0;
-    }
-
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $valor = $_POST['valor'];
-        $combustivel = $_POST['combustivel'];
-
-        if ($valor == 0) {
-            echo "<h3>Encerrando entrada de dados...</h3>";
-            echo "<p>Total de descontos concedidos: R$" . number_format($_SESSION['totalDesconto'], 2, ',', '.') . "</p>";
-            echo "<p>Total pago pelos clientes: R$" . number_format($_SESSION['totalPago'], 2, ',', '.') . "</p>";
-
-            // Limpa sessão para reiniciar
-            session_destroy();
-        } else {
-            // Calcula desconto conforme combustível
-            switch ($combustivel) {
-                case "alcool":
-                    $percentual = 0.25;
-                    break;
-                case "gasolina":
-                    $percentual = 0.21;
-                    break;
-                case "diesel":
-                    $percentual = 0.14;
-                    break;
-                default:
-                    $percentual = 0;
-            }
-
-            $desconto = $valor * $percentual;
-            $valorFinal = $valor - $desconto;
-
-            // Atualiza totais
-            $_SESSION['totalDesconto'] += $desconto;
-            $_SESSION['totalPago'] += $valorFinal;
-
-            echo "<h3>Resultado</h3>";
-            echo "<p>Valor do veículo: R$" . number_format($valor, 2, ',', '.') . "</p>";
-            echo "<p>Desconto aplicado: R$" . number_format($desconto, 2, ',', '.') . "</p>";
-            echo "<p>Valor a ser pago: R$" . number_format($valorFinal, 2, ',', '.') . "</p>";
-        }
-    }
-    ?>
+    <hr>
+    <p><?php echo $mensagem; ?></p>
+    
+    <h3>Resumo Geral (Acumulado):</h3>
+    <p>Total de Descontos Concedidos: <strong>R$ <?php echo number_format($_SESSION['total_desconto'], 2, ',', '.'); ?></strong></p>
+    <p>Total Pago pelos Clientes: <strong>R$ <?php echo number_format($_SESSION['total_pago'], 2, ',', '.'); ?></strong></p>
 </body>
 </html>

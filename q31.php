@@ -1,42 +1,32 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Ordenar Valores</title>
+    <title>Ordem Crescente</title>
 </head>
 <body>
-    <h2>Digite três valores inteiros distintos</h2>
-    <form method="post" action="">
-        <label for="valor1">Valor 1:</label>
-        <input type="number" name="valor1" required><br><br>
-
-        <label for="valor2">Valor 2:</label>
-        <input type="number" name="valor2" required><br><br>
-
-        <label for="valor3">Valor 3:</label>
-        <input type="number" name="valor3" required><br><br>
-
-        <input type="submit" value="Ordenar">
+    <h2>Ordenar 3 Números</h2>
+    <form method="post">
+        <input type="number" name="n1" placeholder="Número 1" required>
+        <input type="number" name="n2" placeholder="Número 2" required>
+        <input type="number" name="n3" placeholder="Número 3" required>
+        <button type="submit">Ordenar</button>
     </form>
 
     <?php
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Lê os valores do formulário
-        $valor1 = (int)$_POST["valor1"];
-        $valor2 = (int)$_POST["valor2"];
-        $valor3 = (int)$_POST["valor3"];
+        $n1 = (int)$_POST['n1'];
+        $n2 = (int)$_POST['n2'];
+        $n3 = (int)$_POST['n3'];
 
-        // Coloca os valores em um array
-        $valores = [$valor1, $valor2, $valor3];
+        // Colocamos os números em um array
+        $numeros = [$n1, $n2, $n3];
 
-        // Ordena o array em ordem crescente
-        sort($valores);
+        // A função sort() do PHP organiza os valores do menor para o maior
+        sort($numeros);
 
-        // Exibe os valores ordenados
         echo "<h3>Valores em ordem crescente:</h3>";
-        foreach ($valores as $v) {
-            echo $v . " ";
-        }
+        echo "<p>" . $numeros[0] . " - " . $numeros[1] . " - " . $numeros[2] . "</p>";
     }
     ?>
 </body>

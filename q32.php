@@ -1,58 +1,63 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Operações Aritméticas</title>
+    <title>Calculadora Simples</title>
 </head>
 <body>
-    <h2>Digite dois números reais e um operador</h2>
-    <form method="post" action="">
-        <label for="A">Valor A:</label>
-        <input type="number" step="any" name="A" required><br><br>
+    <h2>Operações Aritméticas</h2>
+    <form method="post">
+        <input type="number" step="0.01" name="a" placeholder="Valor A" required>
+        
+        <select name="c" required>
+            <option value="">Selecione o Operador</option>
+            <option value="+">+</option>
+            <option value="-">-</option>
+            <option value="*">*</option>
+            <option value="/">/</option>
+            <option value="?">Outro (Teste Erro)</option>
+        </select>
 
-        <label for="B">Valor B:</label>
-        <input type="number" step="any" name="B" required><br><br>
-
-        <label for="C">Operador (+, -, *, /):</label>
-        <input type="text" name="C" maxlength="1" required><br><br>
-
-        <input type="submit" value="Calcular">
+        <input type="number" step="0.01" name="b" placeholder="Valor B" required>
+        
+        <button type="submit">Calcular</button>
     </form>
 
     <?php
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $A = (float)$_POST["A"];
-        $B = (float)$_POST["B"];
-        $C = $_POST["C"];
-
+        $a = (float)$_POST['a'];
+        $b = (float)$_POST['b'];
+        $c = $_POST['c'];
         $resultado = null;
-        $erro = false;
+        $erro = "";
 
-        switch ($C) {
+        switch ($c) {
             case '+':
-                $resultado = $A + $B;
+                $resultado = $a + $b;
                 break;
             case '-':
-                $resultado = $A - $B;
+                $resultado = $a - $b;
                 break;
             case '*':
-                $resultado = $A * $B;
+                $resultado = $a * $b;
                 break;
             case '/':
-                if ($B == 0) {
-                    $erro = true;
-                    echo "<p style='color:red;'>Erro: divisão por zero não permitida.</p>";
+                if ($b == 0) {
+                    $erro = "Erro: Divisão por zero não permitida.";
                 } else {
-                    $resultado = $A / $B;
+                    $resultado = $a / $b;
                 }
                 break;
             default:
-                $erro = true;
-                echo "<p style='color:red;'>Operador não definido.</p>";
+                $erro = "Operador não definido.";
+                break;
         }
 
-        if (!$erro) {
-            echo "<h3>Resultado: $A $C $B = $resultado</h3>";
+        echo "<hr>";
+        if ($erro != "") {
+            echo "<p style='color:red;'>$erro</p>";
+        } else {
+            echo "<h3>Resultado: $a $c $b = $resultado</h3>";
         }
     }
     ?>

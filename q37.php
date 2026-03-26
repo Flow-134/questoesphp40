@@ -1,68 +1,59 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Peso Ideal</title>
+    <title>Cálculo de Peso Ideal</title>
 </head>
 <body>
-    <h2>Calcular Peso Ideal</h2>
-    <form method="post" action="">
-        <label for="nome">Nome:</label>
+    <h2>Calculadora de Peso Ideal</h2>
+    <form method="post">
+        <label>Nome:</label><br>
         <input type="text" name="nome" required><br><br>
 
-        <label for="sexo">Sexo:</label>
+        <label>Sexo:</label><br>
         <select name="sexo" required>
             <option value="M">Masculino</option>
             <option value="F">Feminino</option>
         </select><br><br>
 
-        <label for="altura">Altura (em metros):</label>
+        <label>Idade:</label><br>
+        <input type="number" name="idade" required><br><br>
+
+        <label>Altura (ex: 1.75):</label><br>
         <input type="number" step="0.01" name="altura" required><br><br>
 
-        <label for="idade">Idade:</label>
-        <input type="number" name="idade" min="1" required><br><br>
-
-        <input type="submit" value="Calcular Peso Ideal">
+        <button type="submit">Calcular Peso Ideal</button>
     </form>
 
     <?php
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $nome = $_POST["nome"];
-        $sexo = $_POST["sexo"];
-        $altura = (float)$_POST["altura"];
-        $idade = (int)$_POST["idade"];
+        $nome = $_POST['nome'];
+        $sexo = $_POST['sexo'];
+        $idade = (int)$_POST['idade'];
+        $altura = (float)$_POST['altura'];
         $pesoIdeal = 0;
 
-        if ($sexo == "M") {
-            if ($altura > 1.70) {
-                if ($idade <= 20) {
-                    $pesoIdeal = (72.7 * $altura) - 58;
-                } elseif ($idade >= 21 && $idade <= 39) {
-                    $pesoIdeal = (72.7 * $altura) - 53;
-                } else { // idade >= 40
-                    $pesoIdeal = (72.7 * $altura) - 45;
-                }
-            } else { // altura <= 1.70
-                if ($idade < 40) {
-                    $pesoIdeal = (72.7 * $altura) - 50;
-                } else {
-                    $pesoIdeal = (72.7 * $altura) - 58;
-                }
+        
+        if ($sexo == 'M') {
+            if ($idade >= 65) {
+                // Idosos têm IMC ideal maior (referência 24.5)
+                $pesoIdeal = 24.5 * ($altura * $altura);
+            } else {
+                $pesoIdeal = 22 * ($altura * $altura);
             }
-        } elseif ($sexo == "F") {
-            if ($altura > 1.50) {
-                $pesoIdeal = (62.1 * $altura) - 44.7;
-            } else { // altura <= 1.50
-                if ($idade >= 35) {
-                    $pesoIdeal = (62.1 * $altura) - 45;
-                } else {
-                    $pesoIdeal = (62.1 * $altura) - 49;
-                }
+        } else {
+            if ($idade >= 65) {
+                $pesoIdeal = 25 * ($altura * $altura);
+            } else {
+                $pesoIdeal = 21 * ($altura * $altura);
             }
         }
 
-        echo "<h3>Nome: $nome</h3>";
-        echo "<h3>Peso Ideal: " . number_format($pesoIdeal, 2, ',', '.') . " kg</h3>";
+        echo "<hr>";
+        echo "<h3>Resultado para: $nome</h3>";
+        echo "<p>Idade: $idade anos | Sexo: " . ($sexo == 'M' ? 'Masculino' : 'Feminino') . "</p>";
+        echo "<h2>Seu peso ideal estimado é: " . number_format($pesoIdeal, 2, ',', '.') . " kg</h2>";
+        echo "<p><small>*Este cálculo é uma estimativa baseada em médias de IMC.</small></p>";
     }
     ?>
 </body>

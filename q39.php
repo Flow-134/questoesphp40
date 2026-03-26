@@ -1,58 +1,47 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Classificação do Estudante</title>
+    <title>Classificação de Estudante</title>
 </head>
 <body>
-    <h2>Calcular Nota Final e Classificação</h2>
-    <form method="post" action="">
-        <label>Nome:</label>
-        <input type="text" name="nome" required><br><br>
-
-        <label>Matrícula:</label>
-        <input type="text" name="matricula" required><br><br>
-
-        <label>Nota do Laboratório:</label>
-        <input type="number" name="lab" min="0" max="10" step="0.1" required><br><br>
-
-        <label>Nota da Avaliação Semestral:</label>
-        <input type="number" name="sem" min="0" max="10" step="0.1" required><br><br>
-
-        <label>Nota do Exame Final:</label>
-        <input type="number" name="exam" min="0" max="10" step="0.1" required><br><br>
-
-        <input type="submit" value="Calcular">
+    <h2>Sistema de Notas - Escola</h2>
+    <form method="post">
+        <input type="text" name="nome" placeholder="Nome do Estudante" required><br><br>
+        <input type="text" name="matricula" placeholder="Número de Matrícula" required><br><br>
+        <input type="number" step="0.1" name="n1" placeholder="Nota 1" min="0" max="10" required><br><br>
+        <input type="number" step="0.1" name="n2" placeholder="Nota 2" min="0" max="10" required><br><br>
+        <input type="number" step="0.1" name="n3" placeholder="Nota 3" min="0" max="10" required><br><br>
+        <button type="submit">Calcular Resultado</button>
     </form>
 
     <?php
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $nome = $_POST["nome"];
-        $matricula = $_POST["matricula"];
-        $lab = (float)$_POST["lab"];
-        $sem = (float)$_POST["sem"];
-        $exam = (float)$_POST["exam"];
+        $nome = $_POST['nome'];
+        $matricula = $_POST['matricula'];
+        $n1 = (float)$_POST['n1'];
+        $n2 = (float)$_POST['n2'];
+        $n3 = (float)$_POST['n3'];
 
-        // Pesos
-        $media = (($lab*2) + ($sem*3) + ($exam*5)) / 10;
+        $notaFinal = ($n1 + $n2 + $n3) / 3;
 
-        // Classificação
-        if ($media >= 8) {
+        if ($notaFinal >= 8 && $notaFinal <= 10) {
             $classificacao = "A";
-        } elseif ($media >= 7) {
+        } elseif ($notaFinal >= 7 && $notaFinal < 8) {
             $classificacao = "B";
-        } elseif ($media >= 6) {
+        } elseif ($notaFinal >= 6 && $notaFinal < 7) {
             $classificacao = "C";
-        } elseif ($media >= 5) {
+        } elseif ($notaFinal >= 5 && $notaFinal < 6) {
             $classificacao = "D";
         } else {
             $classificacao = "R";
         }
 
-        echo "<h3>Nome: $nome</h3>";
-        echo "<h3>Matrícula: $matricula</h3>";
-        echo "<h3>Nota Final: " . number_format($media, 2, ',', '.') . "</h3>";
-        echo "<h3>Classificação: $classificacao</h3>";
+        echo "<hr>";
+        echo "<h3>Boletim do Estudante</h3>";
+        echo "<p><strong>Nome:</strong> $nome | <strong>Matrícula:</strong> $matricula</p>";
+        echo "<p><strong>Nota Final:</strong> " . number_format($notaFinal, 2, ',', '.') . "</p>";
+        echo "<h2>Classificação: $classificacao</h2>";
     }
     ?>
 </body>

@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Mês por Extenso</title>
+    <title>Identificador de Mês</title>
 </head>
 <body>
-    <h2>Digite o número do mês (1 a 12)</h2>
     <form method="post">
-        <input type="number" name="mes" min="1" max="12" required>
-        <input type="submit" value="Verificar">
+        <label>Digite o número do mês (1 a 12):</label><br>
+        <input type="number" name="mes" required autofocus>
+        <button type="submit">Verificar</button>
     </form>
 
     <?php
@@ -16,45 +16,22 @@
         $mes = $_POST['mes'];
 
         switch ($mes) {
-            case 1:
-                echo "<p>Janeiro</p>";
-                break;
-            case 2:
-                echo "<p>Fevereiro</p>";
-                break;
-            case 3:
-                echo "<p>Março</p>";
-                break;
-            case 4:
-                echo "<p>Abril</p>";
-                break;
-            case 5:
-                echo "<p>Maio</p>";
-                break;
-            case 6:
-                echo "<p>Junho</p>";
-                break;
-            case 7:
-                echo "<p>Julho</p>";
-                break;
-            case 8:
-                echo "<p>Agosto</p>";
-                break;
-            case 9:
-                echo "<p>Setembro</p>";
-                break;
-            case 10:
-                echo "<p>Outubro</p>";
-                break;
-            case 11:
-                echo "<p>Novembro</p>";
-                break;
-            case 12:
-                echo "<p>Dezembro</p>";
-                break;
-            default:
-                echo "<p>Mês inválido</p>";
+            case 1:  $nomeMes = "Janeiro";   break;
+            case 2:  $nomeMes = "Fevereiro"; break;
+            case 3:  $nomeMes = "Março";     break;
+            case 4:  $nomeMes = "Abril";     break;
+            case 5:  $nomeMes = "Maio";      break;
+            case 6:  $nomeMes = "Junho";     break;
+            case 7:  $nomeMes = "Julho";     break;
+            case 8:  $nomeMes = "Agosto";    break;
+            case 9:  $nomeMes = "Setembro";  break;
+            case 10: $nomeMes = "Outubro";   break;
+            case 11: $nomeMes = "Novembro";  break;
+            case 12: $nomeMes = "Dezembro";  break;
+            default: $nomeMes = "Mês inválido"; break;
         }
+
+        echo "<h3>Resultado: $nomeMes</h3>";
     }
     ?>
 </body>
